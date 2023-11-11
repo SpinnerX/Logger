@@ -1,7 +1,5 @@
-#include <formatCpp/formatCpp.h>
-using namespace std;
-
+#include <Logger.h>
 
 int main(){
-    formatCpp::print("Hello  New Logger Interface!\n");
+    Logger::info("Just for your information!\n");
 }
