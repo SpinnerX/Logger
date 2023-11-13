@@ -2,8 +2,7 @@
 #include <cstring>
 #include <formatCpp/formatCpp.h>
 #include <formatCpp/datetime.h>
-#include <common/colors.h>
-#include <common/Message.h>
+#include "../utility/colors.h"
 
 namespace Logger{
     template<typename... T>
