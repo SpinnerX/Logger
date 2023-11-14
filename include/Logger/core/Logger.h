@@ -80,7 +80,7 @@ namespace Logger{
             }
             auto current = std::chrono::system_clock::now();
             // formatCpp::print(formatCpp::format("{}WARN[{:%c}]:{} {}", Colors::Yellow, current, Colors::Reset, fmt, (args)...));
-            this->print(formatCpp::format("WARN[{:%c}]: {}", current, fmt, (args)...));
+            this->print(formatCpp::format("WARN[{:%c}]: {} {}", current, Colors::Reset, fmt, (args)...));
 
         }
 
@@ -130,24 +130,6 @@ namespace Logger{
             this->print(formatCpp::format("FATAL[{:%c}]: {}", current, fmt), (args)...);
         }
 
-        template<typename... T>
-        friend void warnToFile(std::string fmt, T&&... args);
-
-        template<typename... T>
-        friend void infoToFile(std::string fmt, T&&... args);
-
-        template<typename... T>
-        friend void debugToFile(std::string fmt, T&&... args);
-
-        template<typename... T>
-        friend void traceToFile(std::string fmt, T&&... args);
-
-        template<typename... T>
-        friend void errorToFile(std::string fmt, T&&... args);
-
-        template<typename... T>
-        friend void fatalToFile(std::string fmt, T&&... args);
-
     private:
         // std::string filename; // Containing the filename
         static LoggingToFile* instance; // We want to create one instance for logging to specific files.
@@ -165,38 +147,32 @@ namespace Logger{
 
     template<typename... T>
     void warnToFile(std::string fmt, T&&... args){
-        // return LoggingToFile(fmt).warn((args)...);
-        LoggingToFile::instance->warn(fmt, args...);
+        return LoggingToFile(fmt).warn((args)...);
     }
 
     template<typename... T>
     void infoToFile(std::string fmt, T&&... args){
-        // return LoggingToFile(fmt).info((args)...);
-        LoggingToFile::instance->info(fmt, args...);
+        return LoggingToFile(fmt).info((args)...);
     }
 
     template<typename... T>
     void debugToFile(std::string filename, std::string fmt, T&&... args){
-        // return LoggingToFile(filename).debug(fmt, (args)...);
-        LoggingToFile::instance->debug(fmt, args...);
+        return LoggingToFile(filename).debug(fmt, (args)...);
     }
 
     template<typename... T>
     void traceToFile(std::string fmt, T&&... args){
-        // return LoggingToFile(fmt).trace((args)...);
-        LoggingToFile::instance->trace(fmt, args...);
+        return LoggingToFile(fmt).trace((args)...);
     }
 
     template<typename... T>
     void errorToFile(std::string fmt, T&&... args){
-        // return LoggingToFile(fmt).error((args)...);
-        LoggingToFile::instance->error(fmt, args...);
+        return LoggingToFile(fmt).error((args)...);
     }
 
     template<typename... T>
     void fatalToFile(std::string fmt, T&&... args){
-        // return LoggingToFile(fmt).fatal((args)...);
-        LoggingToFile::instance->fatal(fmt, args...);
+        return LoggingToFile(fmt).fatal((args)...);
     }
 
     LoggingToFile* LoggingToFile::instance = nullptr;
