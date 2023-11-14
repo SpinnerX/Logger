@@ -27,19 +27,19 @@ namespace Logger{
     template<typename... T>
     void trace(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}{:%c} [TRACE] >> {} {}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [TRACE] >> {}{}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void error(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}{:%c} [ERROR] >> {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [ERROR] >> {}{}", Colors::Red, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void fatal(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}{:%c} -- FATAL -- {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [FATAL] >> {}{}", Colors::Red, current, fmt, Colors::Reset), (args)...);
     }
 
 
@@ -54,7 +54,7 @@ namespace Logger{
     // for reading/writing
 
     // NOTE: Might be a better way to doing this, but for now gonna leave it like this
-    // This is just to get something working and then rethinking how this may work. 
+    // This is just to get something working and then rethinking how this may work.
     class LoggingToFile : public formatCpp::v9::ostream {
     public:
         friend class formatCpp::v9::ostream;
@@ -73,62 +73,75 @@ namespace Logger{
         template<typename... T>
         void warn(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
+
             auto current = std::chrono::system_clock::now();
             // formatCpp::print(formatCpp::format("{}WARN[{:%c}]:{} {}", Colors::Yellow, current, Colors::Reset, fmt, (args)...));
-            this->print(formatCpp::format("{:%c} -- WARN -- {} ", current, fmt, (args)...));
+            // instance->print(formatCpp::format("{:%c} -- WARN -- {}", current, fmt, (args)...));
+            this->print(formatCpp::format("{:%c} [WARN] >> {}", current, fmt, (args)...));
 
         }
 
         template<typename... T>
         void info(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- INFO -- {}",current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} [INFO] >> {}", current, fmt), (args)...);
         }
 
         template<typename... T>
         void debug(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
+
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- DEBUG -- {}",current, fmt, (args)...));
+            this->print(formatCpp::format("{:%c} [DEBUG] >> {}", current, fmt, (args)...));
         }
 
         template<typename... T>
         void trace(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
+
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- TRACE -- {}",current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} [TRACE] >> {}", current, fmt), (args)...);
         }
 
         template<typename... T>
         void error(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
+
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- ERROR -- {}",current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} [ERROR] >> {}", current, fmt), (args)...);
         }
 
         template<typename... T>
         void fatal(std::string fmt, T&&... args){
             if(instance == nullptr){
-                error("Instantiate the create() when writint to file!\n");
+                error("Instantiate the create() when writing to file!\n");
+                return;
             }
+
             auto current = std::chrono::system_clock::now();
             
-            this->print(formatCpp::format("{:%c} -- FATAL -- {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} [FATAL] >> {}", current, fmt), (args)...);
         }
 
+        static LoggingToFile* getInstance() { return instance; }
+
     private:
-        // std::string filename; // Containing the filename
         static LoggingToFile* instance; // We want to create one instance for logging to specific files.
     };
 
@@ -144,7 +157,8 @@ namespace Logger{
 
     template<typename... T>
     void warnToFile(std::string fmt, T&&... args){
-        return LoggingToFile(fmt).warn((args)...);
+        // return LoggingToFile(fmt).warn((args)...);
+        LoggingToFile::getInstance()->warn(fmt, args...);
     }
 
     template<typename... T>
