@@ -80,7 +80,7 @@ namespace Logger{
             }
             auto current = std::chrono::system_clock::now();
             // formatCpp::print(formatCpp::format("{}WARN[{:%c}]:{} {}", Colors::Yellow, current, Colors::Reset, fmt, (args)...));
-            this->print(formatCpp::format("WARN[{:%c}]: {} {}", current, Colors::Reset, fmt, (args)...));
+            this->print(formatCpp::format("{:%c} -- WARN -- {} ", current, fmt, (args)...));
 
         }
 
@@ -90,7 +90,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("INFO[{:%c}]: {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- INFO -- {}", current, fmt), (args)...);
         }
 
         template<typename... T>
@@ -99,7 +99,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("DEBUG[{:%c}]: {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- DEBUG -- {} ", current, fmt, (args)...));
         }
 
         template<typename... T>
@@ -108,7 +108,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("TRACE[{:%c}]: {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- TRACE -- {}", current, fmt), (args)...);
         }
 
         template<typename... T>
@@ -117,7 +117,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("ERROR[{:%c}]: {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- ERROR -- {}", current, fmt), (args)...);
         }
 
         template<typename... T>
@@ -127,7 +127,7 @@ namespace Logger{
             }
             auto current = std::chrono::system_clock::now();
             
-            this->print(formatCpp::format("FATAL[{:%c}]: {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- FATAL -- {}", current, fmt), (args)...);
         }
 
     private:
