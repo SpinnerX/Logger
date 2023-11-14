@@ -9,42 +9,39 @@ namespace Logger{
     template<typename... T>
     void warn(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}WARN[{:%c}]: {} {}", Colors::Yellow, current, Colors::Reset, fmt, (args)...));
+        formatCpp::print(formatCpp::format("{}{:%c} [WARN] >> {}{}", Colors::Yellow, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void info(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}INFO[{:%c}]: {} {}", Colors::Yellow, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [INFO] >> {}{}", Colors::Green, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void debug(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}DEBUG[{:%c}]: {} {}", Colors::Blue, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [DEBUG] >> {}{}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void trace(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}TRACE[{:%c}]: {} {}", Colors::Blue, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [TRACE] >> {} {}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
     void error(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}ERROR[{:%c}]: {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} [ERROR] >> {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
     }
 
     template<typename... T>
     void fatal(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
-        formatCpp::print(formatCpp::format("{}FATAL[{:%c}]: {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
+        formatCpp::print(formatCpp::format("{}{:%c} -- FATAL -- {} {}", Colors::Red, current, Colors::Reset, fmt), (args)...);
     }
 
-    template<typename... T>
-    void logWarnToFile(std::string filename, std::string fmt, T&&... args){
-    }
 
 
     // For right now this is how we are going to log files.
@@ -90,7 +87,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- INFO -- {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- INFO -- {}",current, fmt), (args)...);
         }
 
         template<typename... T>
@@ -99,7 +96,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- DEBUG -- {} ", current, fmt, (args)...));
+            this->print(formatCpp::format("{:%c} -- DEBUG -- {}",current, fmt, (args)...));
         }
 
         template<typename... T>
@@ -108,7 +105,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- TRACE -- {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- TRACE -- {}",current, fmt), (args)...);
         }
 
         template<typename... T>
@@ -117,7 +114,7 @@ namespace Logger{
                 error("Instantiate the create() when writint to file!\n");
             }
             auto current = std::chrono::system_clock::now();
-            this->print(formatCpp::format("{:%c} -- ERROR -- {}", current, fmt), (args)...);
+            this->print(formatCpp::format("{:%c} -- ERROR -- {}",current, fmt), (args)...);
         }
 
         template<typename... T>
