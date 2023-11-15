@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include <memory>
 #include <formatCpp/formatCpp.h>
 #include <formatCpp/datetime.h>
 #include <formatCpp/ffstream.h>
@@ -7,37 +8,37 @@
 
 namespace Logger{
     template<typename... T>
-    void warn(std::string fmt, T&&... args){
+    inline void warn(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [WARN] >> {}{}", Colors::Yellow, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
-    void info(std::string fmt, T&&... args){
+    inline void info(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [INFO] >> {}{}", Colors::Green, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
-    void debug(std::string fmt, T&&... args){
+    inline void debug(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [DEBUG] >> {}{}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
-    void trace(std::string fmt, T&&... args){
+    inline void trace(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [TRACE] >> {}{}", Colors::Blue, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
-    void error(std::string fmt, T&&... args){
+    inline void error(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [ERROR] >> {}{}", Colors::Red, current, fmt, Colors::Reset), (args)...);
     }
 
     template<typename... T>
-    void fatal(std::string fmt, T&&... args){
+    inline void fatal(std::string fmt, T&&... args){
         auto current = std::chrono::system_clock::now();
         formatCpp::print(formatCpp::format("{}{:%c} [FATAL] >> {}{}", Colors::Red, current, fmt, Colors::Reset), (args)...);
     }
@@ -66,12 +67,12 @@ namespace Logger{
 
     public:
         template<typename... T>
-        static void create(std::string filename, T&&... args){
+        static inline void create(std::string filename, T&&... args){
             instance = new LoggingToFile(filename, args...);
         }
 
         template<typename... T>
-        void warn(std::string fmt, T&&... args){
+        inline void warn(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -85,7 +86,7 @@ namespace Logger{
         }
 
         template<typename... T>
-        void info(std::string fmt, T&&... args){
+        inline void info(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -95,7 +96,7 @@ namespace Logger{
         }
 
         template<typename... T>
-        void debug(std::string fmt, T&&... args){
+        inline void debug(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -106,7 +107,7 @@ namespace Logger{
         }
 
         template<typename... T>
-        void trace(std::string fmt, T&&... args){
+        inline void trace(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -117,7 +118,7 @@ namespace Logger{
         }
 
         template<typename... T>
-        void error(std::string fmt, T&&... args){
+        inline void error(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -128,7 +129,7 @@ namespace Logger{
         }
 
         template<typename... T>
-        void fatal(std::string fmt, T&&... args){
+        inline void fatal(std::string fmt, T&&... args){
             if(instance == nullptr){
                 error("Instantiate the create() when writing to file!\n");
                 return;
@@ -145,8 +146,58 @@ namespace Logger{
         static LoggingToFile* instance; // We want to create one instance for logging to specific files.
     };
 
+    // This class may be redundant for righht now, but just want some things to work for rn
+    // Having this log, send logs to specific types of user - whether its application clients, from engine, etc.
+    class Log{
+    public:
+        Log() = delete; // Do not implicltly create a default constructor
+        Log(std::string logTo) : name(logTo) {}
+
+        template<typename... T>
+        inline void warn(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - WARN] >> {}{}", Colors::Yellow, current, name, fmt, Colors::Reset), (args)...);
+        }
+
+        template<typename... T>
+        inline void info(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - INFO] >> {}{}", Colors::Green, current, name, fmt, Colors::Reset), (args)...);
+        }
+
+        template<typename... T>
+        inline void debug(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - DEBUG] >> {}{}", Colors::Blue, current, name, fmt, Colors::Reset), (args)...);
+        }
+
+        template<typename... T>
+        inline void trace(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - TRACE] >> {}{}", Colors::Blue, current, name, fmt, Colors::Reset), (args)...);
+        }
+
+        template<typename... T>
+        inline void error(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - ERROR] >> {}{}", Colors::Red, current, name, fmt, Colors::Reset), (args)...);
+        }
+
+        template<typename... T>
+        inline void fatal(std::string fmt, T&&... args){
+            auto current = std::chrono::system_clock::now();
+            formatCpp::print(formatCpp::format("{}{:%c} [{} - FATAL] >> {}{}", Colors::Red, current, name, fmt, Colors::Reset), (args)...);
+        }
+    private:
+        std::string name; // specifying name of what we are sending the logs to
+    };
+
+    Log* SendLogs(std::string sendLogTo){
+        return new Log(sendLogTo);
+    }
+
     template<typename... T>
-    void saveLog(std::string filename, T&&... args){
+    inline void saveLog(std::string filename, T&&... args){
         LoggingToFile::create(filename, args...);
     }
 
@@ -156,33 +207,33 @@ namespace Logger{
     }
 
     template<typename... T>
-    void warnToFile(std::string fmt, T&&... args){
+    inline void warnToFile(std::string fmt, T&&... args){
         // return LoggingToFile(fmt).warn((args)...);
         LoggingToFile::getInstance()->warn(fmt, args...);
     }
 
     template<typename... T>
-    void infoToFile(std::string fmt, T&&... args){
+    inline void infoToFile(std::string fmt, T&&... args){
         return LoggingToFile(fmt).info((args)...);
     }
 
     template<typename... T>
-    void debugToFile(std::string filename, std::string fmt, T&&... args){
+    inline void debugToFile(std::string filename, std::string fmt, T&&... args){
         return LoggingToFile(filename).debug(fmt, (args)...);
     }
 
     template<typename... T>
-    void traceToFile(std::string fmt, T&&... args){
+    inline void traceToFile(std::string fmt, T&&... args){
         return LoggingToFile(fmt).trace((args)...);
     }
 
     template<typename... T>
-    void errorToFile(std::string fmt, T&&... args){
+    inline void errorToFile(std::string fmt, T&&... args){
         return LoggingToFile(fmt).error((args)...);
     }
 
     template<typename... T>
-    void fatalToFile(std::string fmt, T&&... args){
+    inline void fatalToFile(std::string fmt, T&&... args){
         return LoggingToFile(fmt).fatal((args)...);
     }
 
